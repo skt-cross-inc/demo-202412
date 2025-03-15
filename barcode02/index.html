@@ -18,15 +18,11 @@
 <body>
 
 	<main class="wrapper" style="padding-top:2em">
-
 		<section class="container" id="demo-content">
 			<h1 class="title">バーコードリーダー（ZXing版）</h1>
 
-			<p>この例では、デバイスのビデオ カメラから ZXing JavaScript ライブラリを使用して、サポートされている 1D/2D コードをスキャンする方法を示します。
-				複数のビデオ入力デバイス(前面カメラと背面カメラなど) が使用可能な場合、例ではそれらを読み取り、選択を使用して入力デバイスを変更する方法を示します。</p>
-
 			<div>
-				<a class="button" id="startButton">Start</a>
+				<a class="button" id="startButton">読み取り開始</a>
 				<a class="button" id="resetButton">Reset</a>
 			</div>
 
@@ -43,14 +39,6 @@
 			<label>Result:</label>
 			<pre><code id="result"></code></pre>
 		</section>
-
-		<footer class="footer">
-			<section class="container">
-				<p>ZXing TypeScript Demo. Licensed under the <a target="_blank"
-						href="https://github.com/zxing-js/library#license" title="MIT">MIT</a>.</p>
-			</section>
-		</footer>
-
 	</main>
 
 	<script type="text/javascript" src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
