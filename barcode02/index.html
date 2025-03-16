@@ -51,10 +51,8 @@
 
 	<script type="text/javascript">
 		Html5Qrcode.getCameras().then(cameras => {
-			console.log(cameras)
 			const sourceSelect = document.getElementById('sourceSelect')
 			let selectedDeviceId = cameras[0].id
-			console.log(selectedDeviceId)
 
 			if (cameras.length >= 1) {
 				cameras.forEach((element) => {
@@ -90,16 +88,14 @@
 			}
 
 			function startScanner() {
-				console.log(selectedDeviceId)
 				setTimeout(() => {
-
 					html5QrCode.start(
 						selectedDeviceId,
 						{
 							aspectRatio: 1.0,
 							fps: 10,
-							// qrbox: { width: 300, height: 240 },
-							qrbox: qrboxFunction,
+							qrbox: { width: 300, height: 350 },
+							// qrbox: qrboxFunction,
 							supportedScanTypes: Html5QrcodeScanType.SCAN_TYPE_CAMERA,
 							formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE, Html5QrcodeSupportedFormats.EAN_13]
 						},
