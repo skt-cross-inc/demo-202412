@@ -79,7 +79,7 @@
 			document.getElementById('startButton').addEventListener('click', startScanner)
 			document.getElementById('stopButton').addEventListener('click', stopScanner)
 
-			let qrboxFunction = function(viewfinderWidth, viewfinderHeight) {
+			let qrboxFunction = function (viewfinderWidth, viewfinderHeight) {
 				let minEdgePercentage = 0.7
 				let minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight)
 				let qrboxSize = Math.floor(minEdgeSize * minEdgePercentage)
@@ -91,26 +91,29 @@
 
 			function startScanner() {
 				console.log(selectedDeviceId)
-				html5QrCode.start(
-					selectedDeviceId,
-					{
-						aspectRatio: 1.0,
-						fps: 10,
-						// qrbox: { width: 300, height: 240 },
-						qrbox: qrboxFunction,
-						supportedScanTypes: Html5QrcodeScanType.SCAN_TYPE_CAMERA,
-						formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE, Html5QrcodeSupportedFormats.EAN_13]
-					},
-					(decodedText, decodedResult) => {
-						if (current_text !== decodedText) {
-							current_text = decodedText
-							document.getElementById('result').prepend(decodedText + "\n")
-						}
-					},
-					(errorMessage) => { }
-				).catch(err => {
-					console.log(err)
-				})
+				setTimeout(() => {
+
+					html5QrCode.start(
+						selectedDeviceId,
+						{
+							aspectRatio: 1.0,
+							fps: 10,
+							// qrbox: { width: 300, height: 240 },
+							qrbox: qrboxFunction,
+							supportedScanTypes: Html5QrcodeScanType.SCAN_TYPE_CAMERA,
+							formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE, Html5QrcodeSupportedFormats.EAN_13]
+						},
+						(decodedText, decodedResult) => {
+							if (current_text !== decodedText) {
+								current_text = decodedText
+								document.getElementById('result').prepend(decodedText + "\n")
+							}
+						},
+						(errorMessage) => { }
+					).catch(err => {
+						console.log(err)
+					})
+				}, 500)
 			}
 
 			function stopScanner() {
