@@ -49,8 +49,7 @@
 	</main>
 
 	<script type="text/javascript">
-		// Html5Qrcode.getCameras().then(cameras => {
-		navigator.mediaDevices.getUserMedia({ video: { exact: 'environment' } }).then(cameras => {
+		navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }).then(cameras => {
 			console.log(cameras)
 
 			function stopCamera() {
@@ -66,26 +65,8 @@
 			console.log(settings)
 
 			const sourceSelect = document.getElementById('sourceSelect')
-			// let selectedDeviceId = cameras[0].id
 			let selectedDeviceId
 
-			// if (cameras.length >= 1) {
-			// 	selectedDeviceId = cameras[0].id
-			// 	cameras.forEach((element) => {
-			// 		const sourceOption = document.createElement('option')
-			// 		// sourceOption.text = element.label
-			// 		sourceOption.text = element.id
-			// 		sourceOption.value = element.id
-			// 		sourceSelect.appendChild(sourceOption)
-			// 	})
-
-			// 	sourceSelect.onchange = () => {
-			// 		selectedDeviceId = sourceSelect.value;
-			// 	};
-
-			// 	const sourceSelectPanel = document.getElementById('sourceSelectPanel')
-			// 	sourceSelectPanel.style.display = 'block'
-			// } else {
 			selectedDeviceId = settings.deviceId
 			const sourceOption = document.createElement('option')
 			sourceOption.text = settings.deviceId
@@ -96,9 +77,8 @@
 			};
 			const sourceSelectPanel = document.getElementById('sourceSelectPanel')
 			sourceSelectPanel.style.display = 'block'
-			// }
 
-			// stopCamera()
+			stopCamera()
 
 			const html5QrCode = new Html5Qrcode("reader")
 			let current_text = ''
