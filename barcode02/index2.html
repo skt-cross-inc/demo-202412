@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>DEMO Html5-QRCode</title>
+
+	<link rel="stylesheet" rel="preload" as="style" onload="this.rel='stylesheet';this.onload=null"
+		href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+	<link rel="stylesheet" rel="preload" as="style" onload="this.rel='stylesheet';this.onload=null"
+		href="https://unpkg.com/normalize.css@8.0.0/normalize.css">
+	<link rel="stylesheet" rel="preload" as="style" onload="this.rel='stylesheet';this.onload=null"
+		href="https://unpkg.com/milligram@1.3.0/dist/milligram.min.css">
+	<script type="text/javascript" src="html5-qrcode.min.js"></script>
+	<style>
+		div#reader {
+			width: 400px;
+			height: 400px;
+			border: 1px solid gray;
+			overflow: hidden;
+		}
+	</style>
+</head>
+
+<body>
+	https://unpkg.com/html5-qrcode@latest/html5-qrcode.min.js
+
+	<main class="wrapper" style="padding-top:2em">
+		<section class="container" id="demo-content">
+			<h3 class="title">バーコードリーダー</h3>
+			<div id="sourceSelectPanel" style="display: none;">
+				<label for="sourceSelect">カメラ:</label>
+				<select id="sourceSelect" style="max-width:400px">
+				</select>
+			</div>
+			<div>
+				<a class="button" id="startButton">読み取り開始</a>
+				<a class="button" id="stopButton">読み取り停止</a>
+			</div>
+			<div id="reader">
+			</div>
+			<hr>
+			<label>Result:</label>
+			<pre><code id="result"></code></pre>
+			<a class="button" id="resetButton">clear</a>
+		</section>
+	</main>
+
+	<script type="text/javascript">
+		// Html5Qrcode.getCameras().then(cameras => {
+		navigator.mediaDevices.getUserMedia({video:'environment'}).then(cameras => {
+			const sourceSelect = document.getElementById('sourceSelect')
+			let selectedDeviceId = cameras[0].id
+
+			if (cameras.length >= 1) {
+				cameras.forEach((element) => {
+					const sourceOption = document.createElement('option')
+					sourceOption.text = element.id
+					sourceOption.value = element.id
+					sourceSelect.appendChild(sourceOption)
+				})
+
+				sourceSelect.onchange = () => {
+					selectedDeviceId = sourceSelect.value;
+				};
+
+				const sourceSelectPanel = document.getElementById('sourceSelectPanel')
+				sourceSelectPanel.style.display = 'block'
+			}
+
+			const html5QrCode = new Html5Qrcode("reader")
+			let current_text = ''
+
+			document.getElementById('resetButton').addEventListener('click', clearResult)
+			document.getElementById('startButton').addEventListener('click', startScanner)
+			document.getElementById('stopButton').addEventListener('click', stopScanner)
+
+			let qrboxFunction = function (viewfinderWidth, viewfinderHeight) {
+				let minEdgePercentage = 0.7
+				let minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight)
+				let qrboxSize = Math.floor(minEdgeSize * minEdgePercentage)
+				return {
+					width: qrboxSize,
+					height: qrboxSize
+				}
+			}
+
+			function startScanner() {
+				setTimeout(() => {
+					html5QrCode.start(
+						selectedDeviceId,
+						{
+							aspectRatio: 1.0,
+							fps: 10,
+							qrbox: { width: 300, height: 350 },
+							// qrbox: qrboxFunction,
+							supportedScanTypes: Html5QrcodeScanType.SCAN_TYPE_CAMERA,
+							formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE, Html5QrcodeSupportedFormats.EAN_13]
+						},
+						(decodedText, decodedResult) => {
+							if (current_text !== decodedText) {
+								current_text = decodedText
+								document.getElementById('result').prepend(decodedText + "\n")
+							}
+						},
+						(errorMessage) => { }
+					).catch(err => {
+						console.log(err)
+					})
+				}, 500)
+			}
+
+			function stopScanner() {
+				current_text = ''
+				html5QrCode.stop()
+			}
+
+			function clearResult() {
+				document.getElementById('result').textContent = ''
+			}
+		}).catch(err => {
+			console.log(err)
+		})
+	</script>
+
+</body>
+
+</html>
