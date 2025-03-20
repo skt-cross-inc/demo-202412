@@ -50,38 +50,55 @@
 
 	<script type="text/javascript">
 		// Html5Qrcode.getCameras().then(cameras => {
-		navigator.mediaDevices.getUserMedia({video:'environment'}).then(cameras => {
+		navigator.mediaDevices.getUserMedia({ video: 'environment' }).then(cameras => {
+			console.log(cameras)
+
+			function stopCamera() {
+				cameras.getTracks().forEach(track => {
+					console.log(track)
+					track.stop()
+				})
+			}
+
+			const videoTrack = cameras.getVideoTracks()[0]
+			console.log(videoTrack)
+			const settings = videoTrack.getSettings()
+			console.log(settings)
+
 			const sourceSelect = document.getElementById('sourceSelect')
 			// let selectedDeviceId = cameras[0].id
 			let selectedDeviceId
 
-			if (cameras.length >= 1) {
-				selectedDeviceId = cameras[0].id
-				cameras.forEach((element) => {
-					const sourceOption = document.createElement('option')
-					// sourceOption.text = element.label
-					sourceOption.text = element.id
-					sourceOption.value = element.id
-					sourceSelect.appendChild(sourceOption)
-				})
+			// if (cameras.length >= 1) {
+			// 	selectedDeviceId = cameras[0].id
+			// 	cameras.forEach((element) => {
+			// 		const sourceOption = document.createElement('option')
+			// 		// sourceOption.text = element.label
+			// 		sourceOption.text = element.id
+			// 		sourceOption.value = element.id
+			// 		sourceSelect.appendChild(sourceOption)
+			// 	})
 
-				sourceSelect.onchange = () => {
-					selectedDeviceId = sourceSelect.value;
-				};
+			// 	sourceSelect.onchange = () => {
+			// 		selectedDeviceId = sourceSelect.value;
+			// 	};
 
-				const sourceSelectPanel = document.getElementById('sourceSelectPanel')
-				sourceSelectPanel.style.display = 'block'
-			} else {
-				selectedDeviceId = cameras.id
-				const sourceOption = document.createElement('option')
-				sourceOption.text = cameras.id
-				sourceOption.value = cameras.id
-				sourceSelect.appendChild(sourceOption)
-				sourceSelect.onchange = () => {
-					selectedDeviceId = sourceSelect.value;
-				};
-				const sourceSelectPanel = document.getElementById('sourceSelectPanel')
-			}
+			// 	const sourceSelectPanel = document.getElementById('sourceSelectPanel')
+			// 	sourceSelectPanel.style.display = 'block'
+			// } else {
+			selectedDeviceId = settings.deviceId
+			const sourceOption = document.createElement('option')
+			sourceOption.text = settings.deviceId
+			sourceOption.value = settings.deviceId
+			sourceSelect.appendChild(sourceOption)
+			sourceSelect.onchange = () => {
+				selectedDeviceId = sourceSelect.value;
+			};
+			const sourceSelectPanel = document.getElementById('sourceSelectPanel')
+			sourceSelectPanel.style.display = 'block'
+			// }
+
+			// stopCamera()
 
 			const html5QrCode = new Html5Qrcode("reader")
 			let current_text = ''
@@ -99,6 +116,8 @@
 					height: qrboxSize
 				}
 			}
+
+			startScanner()
 
 			function startScanner() {
 				setTimeout(() => {
