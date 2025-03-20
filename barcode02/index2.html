@@ -50,7 +50,7 @@
 
 	<script type="text/javascript">
 		// Html5Qrcode.getCameras().then(cameras => {
-		navigator.mediaDevices.getUserMedia({ video: 'environment' }).then(cameras => {
+		navigator.mediaDevices.getUserMedia({ video: { exact: 'environment' } }).then(cameras => {
 			console.log(cameras)
 
 			function stopCamera() {
