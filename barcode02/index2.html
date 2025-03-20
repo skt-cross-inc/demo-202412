@@ -74,8 +74,8 @@
 			} else {
 				selectedDeviceId = cameras.id
 				const sourceOption = document.createElement('option')
-				sourceOption.text = element.id
-				sourceOption.value = element.id
+				sourceOption.text = cameras.id
+				sourceOption.value = cameras.id
 				sourceSelect.appendChild(sourceOption)
 				sourceSelect.onchange = () => {
 					selectedDeviceId = sourceSelect.value;
