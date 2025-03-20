@@ -52,11 +52,14 @@
 		// Html5Qrcode.getCameras().then(cameras => {
 		navigator.mediaDevices.getUserMedia({video:'environment'}).then(cameras => {
 			const sourceSelect = document.getElementById('sourceSelect')
-			let selectedDeviceId = cameras[0].id
+			// let selectedDeviceId = cameras[0].id
+			let selectedDeviceId
 
 			if (cameras.length >= 1) {
+				selectedDeviceId = cameras[0].id
 				cameras.forEach((element) => {
 					const sourceOption = document.createElement('option')
+					// sourceOption.text = element.label
 					sourceOption.text = element.id
 					sourceOption.value = element.id
 					sourceSelect.appendChild(sourceOption)
@@ -68,6 +71,16 @@
 
 				const sourceSelectPanel = document.getElementById('sourceSelectPanel')
 				sourceSelectPanel.style.display = 'block'
+			} else {
+				selectedDeviceId = cameras.id
+				const sourceOption = document.createElement('option')
+				sourceOption.text = element.id
+				sourceOption.value = element.id
+				sourceSelect.appendChild(sourceOption)
+				sourceSelect.onchange = () => {
+					selectedDeviceId = sourceSelect.value;
+				};
+				const sourceSelectPanel = document.getElementById('sourceSelectPanel')
 			}
 
 			const html5QrCode = new Html5Qrcode("reader")
