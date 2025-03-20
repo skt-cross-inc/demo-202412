@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>DEMO Html5-QRCode</title>
+	<title>DEMO2 Html5-QRCode</title>
 
 	<link rel="stylesheet" rel="preload" as="style" onload="this.rel='stylesheet';this.onload=null"
 		href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
@@ -25,11 +25,9 @@
 </head>
 
 <body>
-	https://unpkg.com/html5-qrcode@latest/html5-qrcode.min.js
-
 	<main class="wrapper" style="padding-top:2em">
 		<section class="container" id="demo-content">
-			<h3 class="title">バーコードリーダー</h3>
+			<h3 class="title">バーコードリーダー DEMO2</h3>
 			<div id="sourceSelectPanel" style="display: none;">
 				<label for="sourceSelect">カメラ:</label>
 				<select id="sourceSelect" style="max-width:400px">
@@ -45,38 +43,47 @@
 			<label>Result:</label>
 			<pre><code id="result"></code></pre>
 			<a class="button" id="resetButton">clear</a>
+			<div>
+				<a href="index.html">DEMO</a>
+			</div>
 		</section>
 	</main>
 
 	<script type="text/javascript">
-		navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }).then(cameras => {
-			console.log(cameras)
+		let selectedDeviceId
+		const sourceSelect = document.getElementById('sourceSelect')
 
+		Html5Qrcode.getCameras().then(cameras => {
+			if (cameras.length >= 1) {
+				cameras.forEach((element) => {
+					const sourceOption = document.createElement('option')
+					sourceOption.text = element.label
+					sourceOption.value = element.id
+					sourceSelect.appendChild(sourceOption)
+				})
+
+				sourceSelect.onchange = () => {
+					selectedDeviceId = sourceSelect.value;
+				};
+
+				const sourceSelectPanel = document.getElementById('sourceSelectPanel')
+				sourceSelectPanel.style.display = 'block'
+			}
+		}).catch(err => {
+			console.log(err)
+		})
+
+		navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }).then(cameras => {
 			function stopCamera() {
 				cameras.getTracks().forEach(track => {
-					console.log(track)
 					track.stop()
 				})
 			}
 
 			const videoTrack = cameras.getVideoTracks()[0]
-			console.log(videoTrack)
 			const settings = videoTrack.getSettings()
-			console.log(settings)
-
-			const sourceSelect = document.getElementById('sourceSelect')
-			let selectedDeviceId
-
 			selectedDeviceId = settings.deviceId
-			const sourceOption = document.createElement('option')
-			sourceOption.text = settings.deviceId
-			sourceOption.value = settings.deviceId
-			sourceSelect.appendChild(sourceOption)
-			sourceSelect.onchange = () => {
-				selectedDeviceId = sourceSelect.value;
-			};
-			const sourceSelectPanel = document.getElementById('sourceSelectPanel')
-			sourceSelectPanel.style.display = 'block'
+			sourceSelect.querySelector("option[value='" + selectedDeviceId + "']").setAttribute("selected", "selected")
 
 			stopCamera()
 
